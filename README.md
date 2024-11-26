@@ -24,6 +24,8 @@ A full-stack To-Do List application built using **React**, **Express.js**, **Mon
 RS-ToDo-App/
 │
 ├── backend/
+│   ├── config/
+│   │   └── db.js             # Database Setup to Mongo
 │   ├── models/
 │   │   └── Task.js           # Mongoose model for tasks
 │   ├── routes/
@@ -36,16 +38,17 @@ RS-ToDo-App/
 │   ├── src/
 │   │   ├── components/
 │   │   │   └── TaskList.jsx  # Task list component
-│   │   ├── index.js          # React entry point
+│   │   ├── index.jsx         # React entry point
 │   │   └── App.jsx           # Main application component
 │   ├── public/               # Public files (e.g., favicon, index.html)
 │   ├── tailwind.config.js    # Tailwind CSS configuration
 │   ├── package.json          # Frontend dependencies and scripts
 │   └── vite.config.js        # Vite configuration
 │
-└── README.md                 # Documentation for the project
-```
+├── README.md                 # Documentation for the project
+└── LICENSE                   # MIT License of this project
 
+```
 ---
 
 ## Setup  
@@ -54,18 +57,17 @@ Follow these steps to run the project locally:
 
 ### Backend  
 
-1. Navigate to the `backend/` directory:  
+1. Navigate to the `todo-app-backend/` directory:  
    ```bash
-   cd backend
+   cd todo-app-backend
    ```
 2. Install dependencies:  
    ```bash
    npm install
    ```
-3. Create a `.env` file in the `backend/` directory and add:  
+3. Create a `.env` file in the `todo-app-backend/` directory and add:  
    ```
    MONGO_URI=<your_mongodb_connection_string>
-   PORT=5000
    ```
 4. Start the backend server:  
    ```bash
@@ -74,9 +76,9 @@ Follow these steps to run the project locally:
 
 ### Frontend  
 
-1. Navigate to the `frontend/` directory:  
+1. Navigate to the `todo-app-frontend/` directory:  
    ```bash
-   cd frontend
+   cd todo-app-frontend
    ```
 2. Install dependencies:  
    ```bash
@@ -108,7 +110,7 @@ Follow these steps to run the project locally:
 
 1. Start the backend server (refer to Setup > Backend).  
 2. Start the frontend server (refer to Setup > Frontend).  
-3. Open [http://localhost:3000](http://localhost:3000) in your browser to access the app.  
+3. Open [http://localhost:5173](http://localhost:5173) in your browser to access the app.  
 
 ---
 
@@ -130,6 +132,7 @@ Follow these steps to run the project locally:
 
 ### Home Page  
 A minimalistic UI to manage your tasks with ease.  
+![Screenshot](https://i.ibb.co/Zm3JTyJ/Screenshot-2024-11-26-215451.png)
 
 ---
 
@@ -138,6 +141,3 @@ A minimalistic UI to manage your tasks with ease.
 This project is open-source and available under the MIT License.  
 
 ---
-```
-
-Make sure to replace `<your_mongodb_connection_string>` with your actual MongoDB connection string. Include relevant screenshots of your app under the "Screenshots" section for a more appealing README.
