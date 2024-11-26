@@ -71,7 +71,7 @@ Follow these steps to run the project locally:
    ```
 4. Start the backend server:  
    ```bash
-   npm start
+   node index.js
    ```
 
 ### Frontend  
