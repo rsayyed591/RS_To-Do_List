@@ -1,71 +1,116 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { PlusCircle, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { PlusCircle, Trash2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+
+const API_URL = 'http://localhost:5000/api/tasks';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    setTasks(storedTasks);
+    fetchTasks();
+
+    const intervalId = setInterval(fetchTasks, 5000); // Check server every 5 seconds
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/tasks/');
+      const res = await axios.get(API_URL);
       setTasks(res.data);
+      setIsOnline(true);
+      syncLocalTasks(res.data);
     } catch (err) {
       console.log('Error Fetching Tasks', err);
+      setIsOnline(false);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const syncLocalTasks = (serverTasks) => {
+    const localTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const newTasks = localTasks.filter(
+      (localTask) => !serverTasks.some((serverTask) => serverTask._id === localTask._id)
+    );
+    if (newTasks.length > 0) {
+      newTasks.forEach((task) => handleAddTask(null, task));
+    }
+  };
 
-  const handleAddTask = async (e) => {
-    e.preventDefault();
-    if (!title) return;
+  const handleAddTask = async (e, taskData = null) => {
+    if (e) e.preventDefault();
+    if (!taskData && !title) return;
+
+    const newTask = taskData || { title, description, completed: false };
+    if (!isOnline) {
+      newTask._id = Date.now().toString();
+      setTasks([newTask, ...tasks]);
+      setTitle('');
+      setDescription('');
+      return;
+    }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/tasks', {
-        title,
-        description,
-      });
+      const res = await axios.post(API_URL, newTask);
       setTasks([res.data, ...tasks]);
       setTitle('');
       setDescription('');
     } catch (err) {
-      console.log("Error Adding Tasks", err);
+      console.log("Error Adding Task", err);
+      newTask._id = Date.now().toString();
+      setTasks([newTask, ...tasks]);
+      setTitle('');
+      setDescription('');
     }
-  }
+  };
 
   const toggleCompletion = async (id, currentStatus) => {
+    const updatedTasks = tasks.map((task) =>
+      task._id === id ? { ...task, completed: !currentStatus } : task
+    );
+    setTasks(updatedTasks);
+
+    if (!isOnline) return;
+
     try {
-      const res = await axios.put(`http://localhost:5000/api/tasks/${id}`, {
-        completed: !currentStatus,
-      });
-      setTasks(
-        tasks.map((task) =>
-          task._id === id ? { ...task, completed: res.data.completed } : task
-        )
-      );
+      await axios.put(`${API_URL}/${id}`, { completed: !currentStatus });
     } catch (err) {
       console.log('Error Updating Task', err);
     }
-  }
+  };
 
   const deleteTask = async (id) => {
+    setTasks(tasks.filter((task) => task._id !== id));
+
+    if (!isOnline) return;
+
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
-      setTasks(tasks.filter((task) => task._id !== id));
+      await axios.delete(`${API_URL}/${id}`);
     } catch (err) {
-      console.log('Error Deleting Task', err)
+      console.log('Error Deleting Task', err);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="px-4 py-5 sm:px-6">
+        <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">RS : To Do List</h1>
+          {!isOnline && (
+            <div className="flex items-center text-yellow-600">
+              <AlertCircle className="w-5 h-5 mr-2" />
+              <span>Offline Mode</span>
+            </div>
+          )}
         </div>
         <div className="border-t border-gray-200">
           <form onSubmit={handleAddTask} className="px-4 py-5 sm:p-6">
@@ -150,7 +195,7 @@ const TaskList = () => {
       </div>
     </div>
   );
-}
+};
 
 export default TaskList;
 
