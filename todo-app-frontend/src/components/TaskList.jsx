@@ -101,32 +101,32 @@ const TaskList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
-      <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">RS : To Do List</h1>
+    <div className="min-h-screen bg-gray-100 py-2 px-2 sm:py-4 sm:px-4 md:py-8 md:px-6">
+      <div className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="px-3 py-4 sm:px-4 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">RS : To Do List</h1>
           {!isOnline && (
-            <div className="flex items-center text-yellow-600">
-              <AlertCircle className="w-5 h-5 mr-2" />
+            <div className="flex items-center text-yellow-600 text-sm">
+              <AlertCircle className="w-4 h-4 mr-2" />
               <span>Offline Mode</span>
             </div>
           )}
         </div>
         <div className="border-t border-gray-200">
-          <form onSubmit={handleAddTask} className="px-4 py-5 sm:p-6">
-            <div className="space-y-4">
+          <form onSubmit={handleAddTask} className="px-3 py-4 sm:px-4 sm:py-5">
+            <div className="space-y-3">
               <input
                 type="text"
                 placeholder="Task Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
               <textarea
                 placeholder="Task Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
               <button
                 type="submit"
@@ -142,13 +142,13 @@ const TaskList = () => {
           {tasks.map((task) => (
             <li
               key={task._id}
-              className={`px-4 py-4 sm:px-6 ${
+              className={`px-3 py-4 sm:px-4 sm:py-5 ${
                 task.completed ? 'bg-green-50' : ''
               }`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex-1 min-w-0">
-                  <h3 className={`text-lg font-medium text-gray-900 ${
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                <div className="flex-1 min-w-0 pr-2 sm:pr-4">
+                  <h3 className={`text-base sm:text-lg font-medium text-gray-900 ${
                     task.completed ? 'line-through' : ''
                   }`}>
                     {task.title}
@@ -159,10 +159,10 @@ const TaskList = () => {
                     {task.description}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0 flex space-x-2">
+                <div className="flex-shrink-0 flex space-x-2">
                   <button
                     onClick={() => toggleCompletion(task._id, task.completed)}
-                    className={`inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md ${
+                    className={`flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs sm:text-sm font-medium rounded-md ${
                       task.completed
                         ? 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200'
                         : 'text-green-700 bg-green-100 hover:bg-green-200'
@@ -170,22 +170,22 @@ const TaskList = () => {
                   >
                     {task.completed ? (
                       <>
-                        <XCircle className="mr-1 h-5 w-5" />
-                        Incomplete
+                        <XCircle className="mr-1 h-4 w-4 sm:h-5 sm:w-5" />
+                        <span className="sm:inline">Incomplete</span>
                       </>
                     ) : (
                       <>
-                        <CheckCircle className="mr-1 h-5 w-5" />
-                        Complete
+                        <CheckCircle className="mr-1 h-4 w-4 sm:h-5 sm:w-5" />
+                        <span className="sm:inline">Complete</span>
                       </>
                     )}
                   </button>
                   <button
                     onClick={() => deleteTask(task._id)}
-                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    className={`flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs sm:text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500`}
                   >
-                    <Trash2 className="mr-1 h-5 w-5" />
-                    Delete
+                    <Trash2 className="mr-1 h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="sm:inline">Delete</span>
                   </button>
                 </div>
               </div>
